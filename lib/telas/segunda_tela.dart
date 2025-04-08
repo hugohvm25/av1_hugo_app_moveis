@@ -20,6 +20,8 @@ class PaginaCaixasEdicao extends StatefulWidget {
 class _PaginaCaixasEdicaoState extends State<PaginaCaixasEdicao> {
   TextEditingController _controladorNome = TextEditingController();
   TextEditingController _controladorEmail = TextEditingController();
+  TextEditingController _controladorTelefone = TextEditingController();
+  TextEditingController _controladorCPF = TextEditingController();
 
   TextField criarCaixaEdicao({
     required TextEditingController controlador,
@@ -48,7 +50,7 @@ class _PaginaCaixasEdicaoState extends State<PaginaCaixasEdicao> {
     return Scaffold(
       appBar: AppBar(title: Text('Entrada de Dados')),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(50.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -58,14 +60,32 @@ class _PaginaCaixasEdicaoState extends State<PaginaCaixasEdicao> {
               dica: 'Digite o nome',
             ),
             SizedBox(height: 10),
+
             criarCaixaEdicao(
               controlador: _controladorEmail,
               rotulo: 'Email',
               dica: 'Digite o email',
             ),
             SizedBox(height: 10),
+
+            criarCaixaEdicao(
+              controlador: _controladorTelefone,
+              rotulo: 'Telefone',
+              dica: 'Digite o telefone',
+            ),
+            SizedBox(height: 10),
+
+            criarCaixaEdicao(
+              controlador: _controladorCPF,
+              rotulo: 'CPF',
+              dica: 'Digite o CPF',
+            ),
+            SizedBox(height: 10),
+
             Text('Nome: ' + _controladorNome.text),
             Text('Email: ' + _controladorEmail.text),
+            Text('Telefone: ' + _controladorTelefone.text),
+            Text('CPF: ' + _controladorCPF.text),
           ],
         ),
       ),
