@@ -1,118 +1,60 @@
 import 'package:flutter/material.dart';
 
 class SegundaTela extends StatelessWidget {
-  const SegundaTela({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Exemplo de Entrada de Dados',
-      home: const PaginaCaixasEdicao(),
-    );
-  }
-}
-
-class PaginaCaixasEdicao extends StatefulWidget {
-  const PaginaCaixasEdicao({Key? key}) : super(key: key);
-  @override
-  State<PaginaCaixasEdicao> createState() => _PaginaCaixasEdicaoState();
-}
-
-class _PaginaCaixasEdicaoState extends State<PaginaCaixasEdicao> {
-  TextEditingController _controladorNome = TextEditingController();
-  TextEditingController _controladorEmail = TextEditingController();
-  TextEditingController _controladorTelefone = TextEditingController();
-  TextEditingController _controladorCPF = TextEditingController();
-
-  TextField criarCaixaEdicao({
-    required TextEditingController controlador,
-    required String rotulo,
-    String dica = '',
-  }) {
-    return TextField(
-      controller: controlador,
-      decoration: InputDecoration(
-        labelText: rotulo,
-        border: OutlineInputBorder(),
-        hintText: dica,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controladorNome.dispose();
-    _controladorEmail.dispose();
-    super.dispose();
-  }
+  final _formKey = GlobalKey<FormState>(); // Chave para acessar o estado do Form
+  final _nomecontrolador = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Entrada de Dados')),
+      appBar: AppBar(title: Text('Cadastro')),
       body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            criarCaixaEdicao(
-              controlador: _controladorNome,
-              rotulo: 'Nome',
-              dica: 'Digite o nome',
-            ),
-            SizedBox(height: 10),
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey, // Conecta o formulário à chave
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nomecontrolador,
+                decoration: InputDecoration(labelText: 'Digite aqui'),
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Por favor, insira seu nome';
+                  } 
+                  return null;
+                },
+              ),
 
-            criarCaixaEdicao(
-              controlador: _controladorEmail,
-              rotulo: 'Email',
-              dica: 'Digite o email',
-            ),
-            SizedBox(height: 10),
-
-            criarCaixaEdicao(
-              controlador: _controladorTelefone,
-              rotulo: 'Telefone',
-              dica: 'Digite o telefone',
-            ),
-            SizedBox(height: 10),
-
-            criarCaixaEdicao(
-              controlador: _controladorCPF,
-              rotulo: 'CPF',
-              dica: 'Digite o CPF',
-            ),
-            SizedBox(height: 10),
-
-            Text('Nome: ' + _controladorNome.text),
-            Text('Email: ' + _controladorEmail.text),
-            Text('Telefone: ' + _controladorTelefone.text),
-            Text('CPF: ' + _controladorCPF.text),
-          ],
+              SizedBox(height: 24),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Se os campos estiverem válidos
+                      final texto = _nomecontrolador.text;
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: Text('Dados Enviados'),
+                          content: Text('Texto: $texto'),
+                          actions: [
+                            TextButton(
+                              child: Text('OK'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  child: Text('Enviar'),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {});
-        },
-        tooltip: 'Confirmar',
-        child: const Icon(Icons.add),
       ),
     );
   }
 }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Segunda Tela')),
-//       body: Center(
-//         child: ElevatedButton(
-//           child: const Text('Voltar'),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
