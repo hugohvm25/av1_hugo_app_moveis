@@ -8,20 +8,27 @@ void main() {
 }
 
 class MeuApp extends StatelessWidget {
+  final List<String> nomes = [];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'App com Rotas',
+      title: 'AV1_Hugo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // Define a primeira rota (inicial)
       initialRoute: '/',
-      // Rotas nomeadas
-      routes: {
-        '/': (context) => PrimeiraTela(),
-        '/segunda': (context) => SegundaTela(),
-        '/terceira': (context) => TerceiraTela(),
+      onGenerateRoute: (cfg) {
+        switch (cfg.name) {
+          case '/':
+            return MaterialPageRoute(builder: (_) => PrimeiraTela(nomes));
+          case '/segunda':
+            return MaterialPageRoute(builder: (_) => SegundaTela(nomes));
+          case '/terceira':
+            return MaterialPageRoute(builder: (_) => const TerceiraTela());
+          default:
+            return null;
+        }
       },
     );
   }
