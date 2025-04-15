@@ -1,50 +1,78 @@
 import 'package:flutter/material.dart';
 
-class PrimeiraTela extends StatelessWidget {
-  final List<String> nomes;
+class PrimeiraTela extends StatefulWidget {
+  const PrimeiraTela({super.key});
 
-  PrimeiraTela(this.nomes, {super.key});
+  @override
+  State<PrimeiraTela> createState() => _PrimeiraTelaState();
+}
+
+class _PrimeiraTelaState extends State<PrimeiraTela> {
+  List<String> itens = [];
+
+  void adicionarItem() async {
+    final novoItem = await Navigator.pushNamed(context, '/segunda');
+    if (novoItem != null) {
+      setState(() {
+        itens.add(novoItem as String);
+      });
+    }
+  }
+
+  void editarItem(int index) async {
+    final novoItem = await Navigator.pushNamed(
+      context,
+      '/formulario',
+      arguments: itens[index],
+    );
+    if (novoItem != null) {
+      setState(() {
+        itens[index] = novoItem as String;
+      });
+    }
+  }
+
+  void removerItem(int index) {
+    setState(() {
+      itens.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tela Principal')),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  child: Text('Cadastro'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/segunda');
-                  },
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  child: Text('Terceira Tela'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/terceira');
-                  },
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: nomes.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.person), // Ícone de pessoa
-                    title: Text(nomes[index]),
-                  );
-                },
+      appBar: AppBar(
+        title: const Text('Lista de Itens'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info),
+            onPressed: () => Navigator.pushNamed(context, '/terceira'),
+          )
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: itens.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(itens[index]),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit, color: Colors.orange),
+                onPressed: () => editarItem(index),
               ),
-            ),
-          ],
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () => removerItem(index),
+              ),
+            ],
+          ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: adicionarItem,
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
-
