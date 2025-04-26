@@ -13,16 +13,26 @@ class _SegundaTelaState extends State<SegundaTela> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final texto = ModalRoute.of(context)!.settings.arguments;
-    if (texto != null && texto is String) {
+
+    var texto = ModalRoute.of(context)!.settings.arguments;
+
+    if (texto is String) {
       _controlador.text = texto;
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Item')),
+      appBar: AppBar(
+          title: const Text('Adicionar Item', style: TextStyle(color: Colors.white)),
+      backgroundColor: Colors.indigo,
+        iconTheme: const IconThemeData(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color.fromRGBO(37, 37, 37, 1.0),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -30,8 +40,12 @@ class _SegundaTelaState extends State<SegundaTela> {
             TextField(
               controller: _controlador,
               decoration: const InputDecoration(
-                labelText: 'Digite algo',
-                border: OutlineInputBorder(), // 👉 contorno aplicado aqui
+                labelText: 'Digite aqui', labelStyle: TextStyle(color: Colors.white),
+                border: OutlineInputBorder(),
+              ),
+              style: TextStyle(
+                color: Colors.white, // Cor do texto digitado
+                fontSize: 18,        // Tamanho do texto (opcional)
               ),
             ),
             const SizedBox(height: 20),
@@ -39,7 +53,7 @@ class _SegundaTelaState extends State<SegundaTela> {
               onPressed: () {
                 Navigator.pop(context, _controlador.text);
               },
-              child: const Text('Salvar'),
+              child: const Text('Adicionar'),
             )
           ],
         ),
