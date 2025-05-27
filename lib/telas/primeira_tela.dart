@@ -347,7 +347,127 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'banco_dados.dart';
+//
+// class PrimeiraTela extends StatefulWidget {
+//   const PrimeiraTela({super.key});
+//
+//   @override
+//   State<PrimeiraTela> createState() => _PrimeiraTelaState();
+// }
+//
+// class _PrimeiraTelaState extends State<PrimeiraTela> {
+//   final BancoDados _banco = BancoDados(); // Instância do banco
+//   List<Map<String, dynamic>> itens = [];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     carregarItens(); // Carrega os itens do banco ao iniciar
+//   }
+//
+//   // Carrega itens não excluídos do banco de dados
+//   void carregarItens() async {
+//     final dados = await _banco.database;
+//     final resultado = await dados.query('itens', where: 'excluido = ?', whereArgs: [0]);
+//     setState(() {
+//       itens = resultado;
+//     });
+//   }
+//
+//   // Adiciona novo item usando rota para segunda tela
+//   void adicionarItem() async {
+//     final novoItem = await Navigator.pushNamed(context, '/segunda');
+//     if (novoItem != null && novoItem is String) {
+//       await _banco.adicionarItem(novoItem);
+//       carregarItens();
+//     }
+//   }
+//
+//   // Edita item existente
+//   void editarItem(int id, String nomeAtual) async {
+//     final novoNome = await Navigator.pushNamed(context, '/segunda', arguments: nomeAtual);
+//     if (novoNome != null && novoNome is String) {
+//       await _banco.editarItem(id, novoNome);
+//       carregarItens();
+//     }
+//   }
+//
+//   // Remove (marca como excluído) o item
+//   void removerItem(int id) async {
+//     await _banco.removerItem(id);
+//     carregarItens();
+//   }
+//
+//   // Navega para a lixeira, passando o banco e a função de recarregar
+//   void irParaLixeira() {
+//     Navigator.pushNamed(
+//       context,
+//       '/terceira',
+//       arguments: {
+//         'banco': _banco,
+//         'carregarItens': carregarItens,
+//       },
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Lista de Itens', style: TextStyle(color: Colors.white)),
+//         backgroundColor: Colors.indigo,
+//         actions: [
+//           IconButton(
+//             icon: const Icon(Icons.delete, color: Colors.white),
+//             onPressed: irParaLixeira,
+//           )
+//         ],
+//       ),
+//
+//       backgroundColor: const Color.fromRGBO(37, 37, 37, 1.0),
+//
+//       body: ListView.builder(
+//         itemCount: itens.length,
+//         itemBuilder: (context, index) {
+//           final item = itens[index];
+//           return ListTile(
+//             title: Text(
+//               item['nome'],
+//               style: const TextStyle(color: Colors.white, fontSize: 18),
+//             ),
+//             trailing: Row(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 IconButton(
+//                   icon: const Icon(Icons.edit, color: Colors.orange),
+//                   onPressed: () => editarItem(item['id'], item['nome']),
+//                 ),
+//                 IconButton(
+//                   icon: const Icon(Icons.delete, color: Colors.red),
+//                   onPressed: () => removerItem(item['id']),
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//       ),
+//
+//       floatingActionButton: FloatingActionButton.extended(
+//         onPressed: adicionarItem,
+//         icon: const Icon(Icons.add, size: 40),
+//         label: const Text('Adicionar'),
+//       ),
+//
+//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
+import 'package:hugo_av1/telas/tabela_dados.dart';
 import 'banco_dados.dart';
 
 class PrimeiraTela extends StatefulWidget {
@@ -358,16 +478,15 @@ class PrimeiraTela extends StatefulWidget {
 }
 
 class _PrimeiraTelaState extends State<PrimeiraTela> {
-  final BancoDados _banco = BancoDados(); // Instância do banco
+  final BancoDados _banco = BancoDados();
   List<Map<String, dynamic>> itens = [];
 
   @override
   void initState() {
     super.initState();
-    carregarItens(); // Carrega os itens do banco ao iniciar
+    carregarItens();
   }
 
-  // Carrega itens não excluídos do banco de dados
   void carregarItens() async {
     final dados = await _banco.database;
     final resultado = await dados.query('itens', where: 'excluido = ?', whereArgs: [0]);
@@ -376,7 +495,6 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
     });
   }
 
-  // Adiciona novo item usando rota para segunda tela
   void adicionarItem() async {
     final novoItem = await Navigator.pushNamed(context, '/segunda');
     if (novoItem != null && novoItem is String) {
@@ -385,7 +503,6 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
     }
   }
 
-  // Edita item existente
   void editarItem(int id, String nomeAtual) async {
     final novoNome = await Navigator.pushNamed(context, '/segunda', arguments: nomeAtual);
     if (novoNome != null && novoNome is String) {
@@ -394,13 +511,11 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
     }
   }
 
-  // Remove (marca como excluído) o item
   void removerItem(int id) async {
     await _banco.removerItem(id);
     carregarItens();
   }
 
-  // Navega para a lixeira, passando o banco e a função de recarregar
   void irParaLixeira() {
     Navigator.pushNamed(
       context,
@@ -412,6 +527,29 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
     );
   }
 
+  void mostrarTabelas() async {
+    final db = await _banco.database;
+    final resultado = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+    final tabelas = resultado.map((e) => e['name'] as String).toList();
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Tabelas no Banco de Dados'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: tabelas.map((t) => Text(t)).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fechar'),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -420,14 +558,25 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
         backgroundColor: Colors.indigo,
         actions: [
           IconButton(
+            icon: const Icon(Icons.table_chart, color: Colors.white),
+            tooltip: 'Ver dados da tabela',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TabelaDados(banco: _banco),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.delete, color: Colors.white),
             onPressed: irParaLixeira,
-          )
+            tooltip: 'Ir para lixeira',
+          ),
         ],
       ),
-
       backgroundColor: const Color.fromRGBO(37, 37, 37, 1.0),
-
       body: ListView.builder(
         itemCount: itens.length,
         itemBuilder: (context, index) {
@@ -453,14 +602,13 @@ class _PrimeiraTelaState extends State<PrimeiraTela> {
           );
         },
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: adicionarItem,
         icon: const Icon(Icons.add, size: 40),
         label: const Text('Adicionar'),
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
+

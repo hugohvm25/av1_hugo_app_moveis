@@ -101,7 +101,7 @@ class _TerceiraTelaState extends State<TerceiraTela> {
   }
 
   void excluirPermanentemente(int id) async {
-    await banco.excluirDefinitivo(id);
+    await banco.excluirPermanentemente(id);
     await carregarItensExcluidos();
 
     ScaffoldMessenger.of(context).showSnackBar(
