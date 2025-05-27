@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'telas/primeira_tela.dart';
-import 'telas/segunda_tela.dart';
-import 'telas/terceira_tela.dart';
+import 'telas/primeira_tela.dart';  // Garante que PrimeiraTela está corretamente importada
+import 'telas/segunda_tela.dart';  // Garante que SegundaTela está corretamente importada
+import 'telas/terceira_tela.dart'; // Garante que TerceiraTela está corretamente importada
 
 void main() => runApp(const MeuApp());
 
@@ -11,6 +11,7 @@ class MeuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Opcional, remove a faixa "DEBUG"
       title: 'Meu App',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
